@@ -348,7 +348,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     value={customName}
-                    onChange={(e) => setCustomName(e.target.value)}
+                    onChange={(e) => handleNameChange(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
                     placeholder={customPlaceholder[lang]}
                     className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
@@ -356,6 +356,31 @@ const Dashboard = () => {
                   <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
                     <Mic className="w-4 h-4" />
                   </button>
+
+                  {/* Dictionary suggestions dropdown */}
+                  {dictSuggestions.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-1 z-20 glass-card-strong p-2 space-y-1 max-h-60 overflow-y-auto">
+                      <p className="text-[10px] text-muted-foreground px-2 py-1 uppercase tracking-wider">
+                        {lang === "te" ? "సూచనలు — ఎంచుకోండి:" : lang === "hi" ? "सुझाव — चुनें:" : "Suggestions — tap to add:"}
+                      </p>
+                      {dictSuggestions.map((item) => (
+                        <button
+                          key={item.en}
+                          onClick={() => pickSuggestion(item)}
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-all duration-200 text-left group"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground">{item[lang]}</p>
+                            {lang !== "en" && (
+                              <p className="text-xs text-muted-foreground">{item.en}</p>
+                            )}
+                          </div>
+                          <span className="text-xs text-muted-foreground">₹{item.price}</span>
+                          <Plus className="w-3.5 h-3.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <input
                   type="number"
@@ -377,15 +402,7 @@ const Dashboard = () => {
                   <Plus className="w-4 h-4" /> {t("add")}
                 </button>
               </div>
-              {/* Transliteration preview */}
-              {customName.trim() && lang !== "en" && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent/10 border border-accent/20 text-sm animate-fade-in-up">
-                  <span className="text-xs text-muted-foreground">{lang === "te" ? "తెలుగులో:" : "हिंदी में:"}</span>
-                  <span className="font-medium text-accent">{transliterate(customName, lang)}</span>
-                </div>
-              )}
             </div>
-          </div>
         </section>
 
         {/* My Shop Products summary */}
