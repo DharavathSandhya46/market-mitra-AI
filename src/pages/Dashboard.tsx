@@ -311,23 +311,48 @@ const Dashboard = () => {
           {/* Add custom / "Other" product */}
           <div className="border-t border-border pt-5">
             <p className="text-xs text-muted-foreground mb-3">{otherLabel[lang]}</p>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
+                    placeholder={customPlaceholder[lang]}
+                    className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
+                  />
+                  <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
+                    <Mic className="w-4 h-4" />
+                  </button>
+                </div>
                 <input
-                  type="text"
-                  value={customName}
-                  onChange={(e) => setCustomName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
-                  placeholder={customPlaceholder[lang]}
-                  className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
+                  type="number"
+                  value={customQty}
+                  onChange={(e) => setCustomQty(e.target.value)}
+                  placeholder={lang === "te" ? "పరిమాణం" : lang === "hi" ? "मात्रा" : "Qty"}
+                  min="1"
+                  className="w-20 px-3 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-sm text-center"
                 />
-                <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {isListening ? <Mic className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                <input
+                  type="number"
+                  value={customPrice}
+                  onChange={(e) => setCustomPrice(e.target.value)}
+                  placeholder={lang === "te" ? "₹ ధర" : lang === "hi" ? "₹ कीमत" : "₹ Price"}
+                  min="0"
+                  className="w-24 px-3 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-sm text-center"
+                />
+                <button onClick={addCustomProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
+                  <Plus className="w-4 h-4" /> {t("add")}
                 </button>
               </div>
-              <button onClick={addCustomProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
-                <Plus className="w-4 h-4" /> {t("add")}
-              </button>
+              {/* Transliteration preview */}
+              {customName.trim() && lang !== "en" && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent/10 border border-accent/20 text-sm animate-fade-in-up">
+                  <span className="text-xs text-muted-foreground">{lang === "te" ? "తెలుగులో:" : "हिंदी में:"}</span>
+                  <span className="font-medium text-accent">{transliterate(customName, lang)}</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
