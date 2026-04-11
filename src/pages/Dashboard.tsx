@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { transliterate } from "@/lib/transliterate";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 
@@ -17,35 +18,36 @@ interface CatalogProduct {
   id: number;
   name: Record<Language, string>;
   category: Record<Language, string>;
+  qty: number;
   price: number;
 }
 
 const FULL_CATALOG: CatalogProduct[] = [
-  { id: 1, name: { en: "Tata Salt (1kg)", te: "టాటా ఉప్పు (1kg)", hi: "टाटा नमक (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 28 },
-  { id: 2, name: { en: "Amul Butter (500g)", te: "అముల్ వెన్న (500g)", hi: "अमूल मक्खन (500g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 270 },
-  { id: 3, name: { en: "Maggi Noodles (4-pack)", te: "మ్యాగీ నూడుల్స్ (4-ప్యాక్)", hi: "मैगी नूडल्स (4-पैक)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 56 },
-  { id: 4, name: { en: "Surf Excel (1kg)", te: "సర్ఫ్ ఎక్సెల్ (1kg)", hi: "सर्फ एक्सेल (1kg)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 199 },
-  { id: 5, name: { en: "Aashirvaad Atta (5kg)", te: "ఆశీర్వాద్ ఆటా (5kg)", hi: "आशीर्वाद आटा (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 295 },
-  { id: 6, name: { en: "Parle-G Biscuits", te: "పార్లే-జి బిస్కెట్లు", hi: "पार्ले-जी बिस्कुट" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 10 },
-  { id: 7, name: { en: "Brooke Bond Tea (250g)", te: "బ్రూక్ బాండ్ టీ (250g)", hi: "ब्रुक बॉन्ड चाय (250g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 110 },
-  { id: 8, name: { en: "Fortune Oil (1L)", te: "ఫార్చ్యూన్ ఆయిల్ (1L)", hi: "फॉर्च्यून तेल (1L)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 155 },
-  { id: 9, name: { en: "Amul Milk (500ml)", te: "అముల్ పాలు (500ml)", hi: "अमूल दूध (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 30 },
-  { id: 10, name: { en: "Colgate MaxFresh", te: "కోల్‌గేట్ మ్యాక్స్‌ఫ్రెష్", hi: "कोलगेट मैक्सफ्रेश" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 85 },
-  { id: 11, name: { en: "Haldiram Namkeen (200g)", te: "హల్దీరామ్ నమ్‌కీన్ (200g)", hi: "हल्दीराम नमकीन (200g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 45 },
-  { id: 12, name: { en: "Coca-Cola (750ml)", te: "కోకా-కోలా (750ml)", hi: "कोका-कोला (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 40 },
-  { id: 13, name: { en: "India Gate Basmati (1kg)", te: "ఇండియా గేట్ బాస్మతి (1kg)", hi: "इंडिया गेट बासमती (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 180 },
-  { id: 14, name: { en: "Dettol Soap (75g)", te: "డెట్టాల్ సబ్బు (75g)", hi: "डेटॉल साबुन (75g)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 42 },
-  { id: 15, name: { en: "Nescafe Classic (50g)", te: "నెస్కేఫ్ క్లాసిక్ (50g)", hi: "नेस्कैफे क्लासिक (50g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 160 },
-  { id: 16, name: { en: "Sugar (1kg)", te: "చక్కెర (1kg)", hi: "चीनी (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 45 },
-  { id: 17, name: { en: "Toor Dal (1kg)", te: "కందిపప్పు (1kg)", hi: "तूर दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 140 },
-  { id: 18, name: { en: "Rice (5kg)", te: "బియ్యం (5kg)", hi: "चावल (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 320 },
-  { id: 19, name: { en: "Lays Chips", te: "లేస్ చిప్స్", hi: "लेज चिप्स" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 20 },
-  { id: 20, name: { en: "Vim Dishwash (500ml)", te: "విమ్ డిష్‌వాష్ (500ml)", hi: "विम डिशवॉश (500ml)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 55 },
-  { id: 21, name: { en: "Kurkure (100g)", te: "కుర్కురే (100g)", hi: "कुरकुरे (100g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 20 },
-  { id: 22, name: { en: "Curd (500ml)", te: "పెరుగు (500ml)", hi: "दही (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 30 },
-  { id: 23, name: { en: "Paneer (200g)", te: "పన్నీర్ (200g)", hi: "पनीर (200g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 80 },
-  { id: 24, name: { en: "Chana Dal (1kg)", te: "శనగపప్పు (1kg)", hi: "चना दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 120 },
-  { id: 25, name: { en: "Thumbs Up (750ml)", te: "థమ్స్ అప్ (750ml)", hi: "थम्स अप (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 40 },
+  { id: 1, name: { en: "Tata Salt (1kg)", te: "టాటా ఉప్పు (1kg)", hi: "टाटा नमक (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 24, price: 28 },
+  { id: 2, name: { en: "Amul Butter (500g)", te: "అముల్ వెన్న (500g)", hi: "अमूल मक्खन (500g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 12, price: 270 },
+  { id: 3, name: { en: "Maggi Noodles (4-pack)", te: "మ్యాగీ నూడుల్స్ (4-ప్యాక్)", hi: "मैगी नूडल्स (4-पैक)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 48, price: 56 },
+  { id: 4, name: { en: "Surf Excel (1kg)", te: "సర్ఫ్ ఎక్సెల్ (1kg)", hi: "सर्फ एक्सेल (1kg)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 15, price: 199 },
+  { id: 5, name: { en: "Aashirvaad Atta (5kg)", te: "ఆశీర్వాద్ ఆటా (5kg)", hi: "आशीर्वाद आटा (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 20, price: 295 },
+  { id: 6, name: { en: "Parle-G Biscuits", te: "పార్లే-జి బిస్కెట్లు", hi: "पार्ले-जी बिस्कुट" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 60, price: 10 },
+  { id: 7, name: { en: "Brooke Bond Tea (250g)", te: "బ్రూక్ బాండ్ టీ (250g)", hi: "ब्रुक बॉन्ड चाय (250g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 30, price: 110 },
+  { id: 8, name: { en: "Fortune Oil (1L)", te: "ఫార్చ్యూన్ ఆయిల్ (1L)", hi: "फॉर्च्यून तेल (1L)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 18, price: 155 },
+  { id: 9, name: { en: "Amul Milk (500ml)", te: "అముల్ పాలు (500ml)", hi: "अमूल दूध (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 40, price: 30 },
+  { id: 10, name: { en: "Colgate MaxFresh", te: "కోల్‌గేట్ మ్యాక్స్‌ఫ్రెష్", hi: "कोलगेट मैक्सफ्रेश" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 22, price: 85 },
+  { id: 11, name: { en: "Haldiram Namkeen (200g)", te: "హల్దీరామ్ నమ్‌కీన్ (200g)", hi: "हल्दीराम नमकीन (200g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 35, price: 45 },
+  { id: 12, name: { en: "Coca-Cola (750ml)", te: "కోకా-కోలా (750ml)", hi: "कोका-कोला (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 25, price: 40 },
+  { id: 13, name: { en: "India Gate Basmati (1kg)", te: "ఇండియా గేట్ బాస్మతి (1kg)", hi: "इंडिया गेट बासमती (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 16, price: 180 },
+  { id: 14, name: { en: "Dettol Soap (75g)", te: "డెట్టాల్ సబ్బు (75g)", hi: "डेटॉल साबुन (75g)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 50, price: 42 },
+  { id: 15, name: { en: "Nescafe Classic (50g)", te: "నెస్కేఫ్ క్లాసిక్ (50g)", hi: "नेस्कैफे क्लासिक (50g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 14, price: 160 },
+  { id: 16, name: { en: "Sugar (1kg)", te: "చక్కెర (1kg)", hi: "चीनी (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 30, price: 45 },
+  { id: 17, name: { en: "Toor Dal (1kg)", te: "కందిపప్పు (1kg)", hi: "तूर दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 20, price: 140 },
+  { id: 18, name: { en: "Rice (5kg)", te: "బియ్యం (5kg)", hi: "चावल (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 15, price: 320 },
+  { id: 19, name: { en: "Lays Chips", te: "లేస్ చిప్స్", hi: "लेज चिप्स" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 40, price: 20 },
+  { id: 20, name: { en: "Vim Dishwash (500ml)", te: "విమ్ డిష్‌వాష్ (500ml)", hi: "विम डिशवॉश (500ml)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 18, price: 55 },
+  { id: 21, name: { en: "Kurkure (100g)", te: "కుర్కురే (100g)", hi: "कुरकुरे (100g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 45, price: 20 },
+  { id: 22, name: { en: "Curd (500ml)", te: "పెరుగు (500ml)", hi: "दही (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 20, price: 30 },
+  { id: 23, name: { en: "Paneer (200g)", te: "పన్నీర్ (200g)", hi: "पनीर (200g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 10, price: 80 },
+  { id: 24, name: { en: "Chana Dal (1kg)", te: "శనగపప్పు (1kg)", hi: "चना दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 18, price: 120 },
+  { id: 25, name: { en: "Thumbs Up (750ml)", te: "థమ్స్ అప్ (750ml)", hi: "थम्स अप (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 25, price: 40 },
 ];
 
 const Dashboard = () => {
@@ -55,6 +57,8 @@ const Dashboard = () => {
   const [customProducts, setCustomProducts] = useState<CatalogProduct[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [customName, setCustomName] = useState("");
+  const [customQty, setCustomQty] = useState("");
+  const [customPrice, setCustomPrice] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
@@ -76,11 +80,18 @@ const Dashboard = () => {
   const addCustomProduct = () => {
     if (!customName.trim()) return;
     const id = Date.now();
-    const name = { en: customName, te: customName, hi: customName };
+    const enName = customName;
+    const teName = transliterate(customName, "te");
+    const hiName = transliterate(customName, "hi");
+    const name = { en: enName, te: teName, hi: hiName };
     const category = { en: "Other", te: "ఇతరాలు", hi: "अन्य" };
-    setCustomProducts((prev) => [...prev, { id, name, category, price: 0 }]);
+    const qty = parseInt(customQty) || 1;
+    const price = parseInt(customPrice) || 0;
+    setCustomProducts((prev) => [...prev, { id, name, category, qty, price }]);
     setSelectedIds((prev) => new Set(prev).add(id));
     setCustomName("");
+    setCustomQty("");
+    setCustomPrice("");
   };
 
   const toggleVoice = () => {
@@ -300,23 +311,48 @@ const Dashboard = () => {
           {/* Add custom / "Other" product */}
           <div className="border-t border-border pt-5">
             <p className="text-xs text-muted-foreground mb-3">{otherLabel[lang]}</p>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
+                    placeholder={customPlaceholder[lang]}
+                    className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
+                  />
+                  <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
+                    <Mic className="w-4 h-4" />
+                  </button>
+                </div>
                 <input
-                  type="text"
-                  value={customName}
-                  onChange={(e) => setCustomName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
-                  placeholder={customPlaceholder[lang]}
-                  className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
+                  type="number"
+                  value={customQty}
+                  onChange={(e) => setCustomQty(e.target.value)}
+                  placeholder={lang === "te" ? "పరిమాణం" : lang === "hi" ? "मात्रा" : "Qty"}
+                  min="1"
+                  className="w-20 px-3 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-sm text-center"
                 />
-                <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {isListening ? <Mic className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                <input
+                  type="number"
+                  value={customPrice}
+                  onChange={(e) => setCustomPrice(e.target.value)}
+                  placeholder={lang === "te" ? "₹ ధర" : lang === "hi" ? "₹ कीमत" : "₹ Price"}
+                  min="0"
+                  className="w-24 px-3 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-sm text-center"
+                />
+                <button onClick={addCustomProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
+                  <Plus className="w-4 h-4" /> {t("add")}
                 </button>
               </div>
-              <button onClick={addCustomProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
-                <Plus className="w-4 h-4" /> {t("add")}
-              </button>
+              {/* Transliteration preview */}
+              {customName.trim() && lang !== "en" && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent/10 border border-accent/20 text-sm animate-fade-in-up">
+                  <span className="text-xs text-muted-foreground">{lang === "te" ? "తెలుగులో:" : "हिंदी में:"}</span>
+                  <span className="font-medium text-accent">{transliterate(customName, lang)}</span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -337,6 +373,7 @@ const Dashboard = () => {
                   style={{ animation: `fadeSlideIn 0.25s ease-out ${idx * 0.03}s both` }}
                 >
                   {p.name[lang]}
+                  {p.qty > 0 && <span className="text-xs text-muted-foreground">x{p.qty}</span>}
                   {p.price > 0 && <span className="text-xs text-muted-foreground">₹{p.price}</span>}
                   <button
                     onClick={() => toggleProduct(p.id)}
