@@ -59,7 +59,7 @@ const Dashboard = () => {
   const [customName, setCustomName] = useState("");
   const [customQty, setCustomQty] = useState("");
   const [customPrice, setCustomPrice] = useState("");
-  const [suggestions, setSuggestions] = useState<DictionaryItem[]>([]);
+  const [dictSuggestions, setDictSuggestions] = useState<DictionaryItem[]>([]);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
