@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 const CHART_DATA = [
   { name: "Grocery", value: 40 },
@@ -15,33 +15,33 @@ const CHART_COLORS = ["hsl(28,100%,55%)", "hsl(160,60%,45%)", "hsl(250,60%,65%)"
 
 interface Product {
   id: number;
-  name: string;
-  category: string;
+  name: Record<Language, string>;
+  category: Record<Language, string>;
   qty: number;
   price: number;
 }
 
 const INITIAL_PRODUCTS: Product[] = [
-  { id: 1, name: "Tata Salt (1kg)", category: "Grocery", qty: 24, price: 28 },
-  { id: 2, name: "Amul Butter (500g)", category: "Dairy", qty: 12, price: 270 },
-  { id: 3, name: "Maggi Noodles (4-pack)", category: "Snacks", qty: 48, price: 56 },
-  { id: 4, name: "Surf Excel (1kg)", category: "Personal Care", qty: 15, price: 199 },
-  { id: 5, name: "Aashirvaad Atta (5kg)", category: "Grocery", qty: 20, price: 295 },
-  { id: 6, name: "Parle-G Biscuits", category: "Snacks", qty: 60, price: 10 },
-  { id: 7, name: "Brooke Bond Tea (250g)", category: "Beverages", qty: 30, price: 110 },
-  { id: 8, name: "Fortune Oil (1L)", category: "Grocery", qty: 18, price: 155 },
-  { id: 9, name: "Amul Milk (500ml)", category: "Dairy", qty: 40, price: 30 },
-  { id: 10, name: "Colgate MaxFresh", category: "Personal Care", qty: 22, price: 85 },
-  { id: 11, name: "Haldiram Namkeen (200g)", category: "Snacks", qty: 35, price: 45 },
-  { id: 12, name: "Coca-Cola (750ml)", category: "Beverages", qty: 25, price: 40 },
-  { id: 13, name: "India Gate Basmati (1kg)", category: "Grocery", qty: 16, price: 180 },
-  { id: 14, name: "Dettol Soap (75g)", category: "Personal Care", qty: 50, price: 42 },
-  { id: 15, name: "Nescafe Classic (50g)", category: "Beverages", qty: 14, price: 160 },
+  { id: 1, name: { en: "Tata Salt (1kg)", te: "టాటా ఉప్పు (1kg)", hi: "टाटा नमक (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 24, price: 28 },
+  { id: 2, name: { en: "Amul Butter (500g)", te: "అముల్ వెన్న (500g)", hi: "अमूल मक्खन (500g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 12, price: 270 },
+  { id: 3, name: { en: "Maggi Noodles (4-pack)", te: "మ్యాగీ నూడుల్స్ (4-ప్యాక్)", hi: "मैगी नूडल्स (4-पैक)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 48, price: 56 },
+  { id: 4, name: { en: "Surf Excel (1kg)", te: "సర్ఫ్ ఎక్సెల్ (1kg)", hi: "सर्फ एक्सेल (1kg)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 15, price: 199 },
+  { id: 5, name: { en: "Aashirvaad Atta (5kg)", te: "ఆశీర్వాద్ ఆటా (5kg)", hi: "आशीर्वाद आटा (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 20, price: 295 },
+  { id: 6, name: { en: "Parle-G Biscuits", te: "పార్లే-జి బిస్కెట్లు", hi: "पार्ले-जी बिस्कुट" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 60, price: 10 },
+  { id: 7, name: { en: "Brooke Bond Tea (250g)", te: "బ్రూక్ బాండ్ టీ (250g)", hi: "ब्रुक बॉन्ड चाय (250g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 30, price: 110 },
+  { id: 8, name: { en: "Fortune Oil (1L)", te: "ఫార్చ్యూన్ ఆయిల్ (1L)", hi: "फॉर्च्यून तेल (1L)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 18, price: 155 },
+  { id: 9, name: { en: "Amul Milk (500ml)", te: "అముల్ పాలు (500ml)", hi: "अमूल दूध (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 40, price: 30 },
+  { id: 10, name: { en: "Colgate MaxFresh", te: "కోల్‌గేట్ మ్యాక్స్‌ఫ్రెష్", hi: "कोलगेट मैक्सफ्रेश" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 22, price: 85 },
+  { id: 11, name: { en: "Haldiram Namkeen (200g)", te: "హల్దీరామ్ నమ్‌కీన్ (200g)", hi: "हल्दीराम नमकीन (200g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 35, price: 45 },
+  { id: 12, name: { en: "Coca-Cola (750ml)", te: "కోకా-కోలా (750ml)", hi: "कोका-कोला (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 25, price: 40 },
+  { id: 13, name: { en: "India Gate Basmati (1kg)", te: "ఇండియా గేట్ బాస్మతి (1kg)", hi: "इंडिया गेट बासमती (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 16, price: 180 },
+  { id: 14, name: { en: "Dettol Soap (75g)", te: "డెట్టాల్ సబ్బు (75g)", hi: "डेटॉल साबुन (75g)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 50, price: 42 },
+  { id: 15, name: { en: "Nescafe Classic (50g)", te: "నెస్కేఫ్ క్లాసిక్ (50g)", hi: "नेस्कैफे क्लासिक (50g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 14, price: 160 },
 ];
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [newProduct, setNewProduct] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -49,7 +49,9 @@ const Dashboard = () => {
 
   const addProduct = () => {
     if (!newProduct.trim()) return;
-    setProducts((prev) => [...prev, { id: Date.now(), name: newProduct, category: "General", qty: 1, price: 0 }]);
+    const name = { en: newProduct, te: newProduct, hi: newProduct };
+    const category = { en: "General", te: "సాధారణ", hi: "सामान्य" };
+    setProducts((prev) => [...prev, { id: Date.now(), name, category, qty: 1, price: 10 }]);
     setNewProduct("");
   };
 
@@ -60,7 +62,7 @@ const Dashboard = () => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) return;
     const recognition = new SR();
-    recognition.lang = "en-IN";
+    recognition.lang = lang === "te" ? "te-IN" : lang === "hi" ? "hi-IN" : "en-IN";
     recognition.onresult = (e: any) => { setNewProduct(e.results[0][0].transcript); setIsListening(false); };
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
@@ -78,7 +80,7 @@ const Dashboard = () => {
   const stats = [
     { label: t("totalProducts"), value: products.length, icon: Package, color: "text-primary" },
     { label: t("aiSuggestions"), value: suggestions.length, icon: Brain, color: "text-accent" },
-    { label: t("categories"), value: [...new Set(products.map((p) => p.category))].length, icon: TrendingUp, color: "text-primary" },
+    { label: t("categories"), value: [...new Set(products.map((p) => p.category[lang]))].length, icon: TrendingUp, color: "text-primary" },
   ];
 
   return (
@@ -193,16 +195,20 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {products.map((p, idx) => (
-                  <tr key={p.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                  <tr
+                    key={p.id}
+                    className="border-b border-border/50 hover:bg-secondary/30 hover:scale-[1.005] transition-all duration-200 origin-left"
+                    style={{ animation: `fadeSlideIn 0.35s ease-out ${idx * 0.04}s both` }}
+                  >
                     <td className="py-3 px-2 text-muted-foreground text-xs">{idx + 1}</td>
-                    <td className="py-3 px-2 text-foreground">{p.name}</td>
+                    <td className="py-3 px-2 text-foreground font-medium">{p.name[lang]}</td>
                     <td className="py-3 px-2">
-                      <span className="px-2 py-0.5 rounded-md bg-secondary text-xs text-secondary-foreground">{p.category}</span>
+                      <span className="px-2 py-0.5 rounded-md bg-secondary text-xs text-secondary-foreground">{p.category[lang]}</span>
                     </td>
                     <td className="py-3 px-2 text-center text-muted-foreground">{p.qty}</td>
-                    <td className="py-3 px-2 text-right text-foreground">₹{p.price}</td>
+                    <td className="py-3 px-2 text-right text-foreground font-medium">₹{p.price}</td>
                     <td className="py-3 px-2 text-right">
-                      <button onClick={() => deleteProduct(p.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200">
+                      <button onClick={() => deleteProduct(p.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:scale-110 transition-all duration-200">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </td>
@@ -216,6 +222,13 @@ const Dashboard = () => {
           </div>
         </section>
       </main>
+
+      <style>{`
+        @keyframes fadeSlideIn {
+          from { opacity: 0; transform: translateX(-8px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
     </div>
   );
 };
