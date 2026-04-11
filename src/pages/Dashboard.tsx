@@ -170,9 +170,9 @@ const Dashboard = () => {
   const clearAllLabel: Record<Language, string> = { en: "Clear All", te: "అన్నీ తీసివేయండి", hi: "सभी हटाएं" };
   const myShopLabel: Record<Language, string> = { en: "My Shop Products", te: "నా దుకాణ ఉత్పత్తులు", hi: "मेरी दुकान के प्रोडक्ट" };
   const catalogLabel: Record<Language, string> = { en: "Product Catalog — Select what's in your shop", te: "ఉత్పత్తి జాబితా — మీ దుకాణంలో ఉన్నవి ఎంచుకోండి", hi: "प्रोडक्ट कैटलॉग — अपनी दुकान में जो है वो चुनें" };
-  const otherLabel: Record<Language, string> = { en: "Product not listed? Add it here:", te: "ఉత్పత్తి జాబితాలో లేదా? ఇక్కడ జోడించండి:", hi: "प्रोडक्ट लिस्ट में नहीं है? यहाँ जोड़ें:" };
-  const searchLabel: Record<Language, string> = { en: "Search products...", te: "ఉత్పత్తులు వెతకండి...", hi: "प्रोडक्ट खोजें..." };
-  const customPlaceholder: Record<Language, string> = { en: "Type product name...", te: "ఉత్పత్తి పేరు టైప్ చేయండి...", hi: "प्रोडक्ट का नाम लिखें..." };
+  const otherLabel: Record<Language, string> = { en: "Product not listed? Type in English — we'll translate!", te: "ఉత్పత్తి లేదా? English లో టైప్ చేయండి — మేము translate చేస్తాము!", hi: "प्रोडक्ट नहीं है? English में टाइप करें — हम translate करेंगे!" };
+  const searchLabel: Record<Language, string> = { en: "Search products...", te: "English లో టైప్ చేయండి... (uppu, pasupu...)", hi: "English में टाइप करें... (namak, haldi...)" };
+  const customPlaceholder: Record<Language, string> = { en: "Type product name (e.g. sugar, salt)...", te: "English లో టైప్ చేయండి (uppu, bellam, pasupu)...", hi: "English में लिखें (namak, cheeni, haldi)..." };
 
   return (
     <div className="min-h-screen gradient-bg">
