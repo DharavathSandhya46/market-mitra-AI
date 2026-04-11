@@ -98,15 +98,15 @@ const Dashboard = () => {
     setCustomName("");
     setCustomQty("");
     setCustomPrice("");
-    setSuggestions([]);
+    setDictSuggestions([]);
   };
 
   const handleNameChange = (value: string) => {
     setCustomName(value);
     if (value.trim().length >= 1) {
-      setSuggestions(searchDictionary(value).slice(0, 6));
+      setDictSuggestions(searchDictionary(value).slice(0, 6));
     } else {
-      setSuggestions([]);
+      setDictSuggestions([]);
     }
   };
 
@@ -122,7 +122,7 @@ const Dashboard = () => {
     setCustomName("");
     setCustomQty("");
     setCustomPrice("");
-    setSuggestions([]);
+    setDictSuggestions([]);
   };
 
   const toggleVoice = () => {
