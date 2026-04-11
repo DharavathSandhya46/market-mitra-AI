@@ -5,12 +5,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 
-const CHART_DATA = [
-  { name: "Grocery", value: 40 },
-  { name: "Snacks", value: 25 },
-  { name: "Beverages", value: 20 },
-  { name: "Personal Care", value: 15 },
-];
+const CHART_DATA_NAMES: Record<Language, string[]> = {
+  en: ["Grocery", "Snacks", "Beverages", "Personal Care"],
+  te: ["కిరాణా", "స్నాక్స్", "పానీయాలు", "పర్సనల్ కేర్"],
+  hi: ["किराना", "स्नैक्स", "पेय पदार्थ", "पर्सनल केयर"],
+};
+const CHART_VALUES = [40, 25, 20, 15];
 const CHART_COLORS = ["hsl(28,100%,55%)", "hsl(160,60%,45%)", "hsl(250,60%,65%)", "hsl(340,70%,55%)"];
 
 interface CatalogProduct {
@@ -173,24 +173,31 @@ const Dashboard = () => {
               <BarChart3 className="w-4 h-4 text-primary" />
               <h2 className="font-display font-semibold text-foreground">{t("categoryDistribution")}</h2>
             </div>
-            <div className="h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={CHART_DATA} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value" stroke="none">
-                    {CHART_DATA.map((_, i) => <Cell key={i} fill={CHART_COLORS[i]} />)}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: "hsl(225,20%,12%)", border: "1px solid hsl(225,15%,25%)", borderRadius: "12px", color: "#fff", fontSize: "13px" }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="flex flex-wrap gap-3 justify-center mt-2">
-              {CHART_DATA.map((d, i) => (
-                <div key={d.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: CHART_COLORS[i] }} />
-                  {d.name}
-                </div>
-              ))}
-            </div>
+            {(() => {
+              const chartData = CHART_DATA_NAMES[lang].map((name, i) => ({ name, value: CHART_VALUES[i] }));
+              return (
+                <>
+                  <div className="h-56">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={chartData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value" stroke="none">
+                          {chartData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i]} />)}
+                        </Pie>
+                        <Tooltip contentStyle={{ background: "hsl(225,20%,12%)", border: "1px solid hsl(225,15%,25%)", borderRadius: "12px", color: "#fff", fontSize: "13px" }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex flex-wrap gap-3 justify-center mt-2">
+                    {chartData.map((d, i) => (
+                      <div key={d.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ background: CHART_COLORS[i] }} />
+                        {d.name}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           <div className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
