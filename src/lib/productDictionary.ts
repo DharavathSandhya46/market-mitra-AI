@@ -6,6 +6,8 @@ export interface DictionaryItem {
   en: string;
   te: string;
   hi: string;
+  // Phonetic spellings in English letters so users can type without Telugu/Hindi keyboard
+  phonetic: string[];
   category: { en: string; te: string; hi: string };
   price: number;
 }
