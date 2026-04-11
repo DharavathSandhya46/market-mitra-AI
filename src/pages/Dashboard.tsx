@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3 } from "lucide-react";
+import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
@@ -13,49 +13,75 @@ const CHART_DATA = [
 ];
 const CHART_COLORS = ["hsl(28,100%,55%)", "hsl(160,60%,45%)", "hsl(250,60%,65%)", "hsl(340,70%,55%)"];
 
-interface Product {
+interface CatalogProduct {
   id: number;
   name: Record<Language, string>;
   category: Record<Language, string>;
-  qty: number;
   price: number;
 }
 
-const INITIAL_PRODUCTS: Product[] = [
-  { id: 1, name: { en: "Tata Salt (1kg)", te: "టాటా ఉప్పు (1kg)", hi: "टाटा नमक (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 24, price: 28 },
-  { id: 2, name: { en: "Amul Butter (500g)", te: "అముల్ వెన్న (500g)", hi: "अमूल मक्खन (500g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 12, price: 270 },
-  { id: 3, name: { en: "Maggi Noodles (4-pack)", te: "మ్యాగీ నూడుల్స్ (4-ప్యాక్)", hi: "मैगी नूडल्स (4-पैक)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 48, price: 56 },
-  { id: 4, name: { en: "Surf Excel (1kg)", te: "సర్ఫ్ ఎక్సెల్ (1kg)", hi: "सर्फ एक्सेल (1kg)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 15, price: 199 },
-  { id: 5, name: { en: "Aashirvaad Atta (5kg)", te: "ఆశీర్వాద్ ఆటా (5kg)", hi: "आशीर्वाद आटा (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 20, price: 295 },
-  { id: 6, name: { en: "Parle-G Biscuits", te: "పార్లే-జి బిస్కెట్లు", hi: "पार्ले-जी बिस्कुट" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 60, price: 10 },
-  { id: 7, name: { en: "Brooke Bond Tea (250g)", te: "బ్రూక్ బాండ్ టీ (250g)", hi: "ब्रुक बॉन्ड चाय (250g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 30, price: 110 },
-  { id: 8, name: { en: "Fortune Oil (1L)", te: "ఫార్చ్యూన్ ఆయిల్ (1L)", hi: "फॉर्च्यून तेल (1L)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 18, price: 155 },
-  { id: 9, name: { en: "Amul Milk (500ml)", te: "అముల్ పాలు (500ml)", hi: "अमूल दूध (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, qty: 40, price: 30 },
-  { id: 10, name: { en: "Colgate MaxFresh", te: "కోల్‌గేట్ మ్యాక్స్‌ఫ్రెష్", hi: "कोलगेट मैक्सफ्रेश" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 22, price: 85 },
-  { id: 11, name: { en: "Haldiram Namkeen (200g)", te: "హల్దీరామ్ నమ్‌కీన్ (200g)", hi: "हल्दीराम नमकीन (200g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, qty: 35, price: 45 },
-  { id: 12, name: { en: "Coca-Cola (750ml)", te: "కోకా-కోలా (750ml)", hi: "कोका-कोला (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 25, price: 40 },
-  { id: 13, name: { en: "India Gate Basmati (1kg)", te: "ఇండియా గేట్ బాస్మతి (1kg)", hi: "इंडिया गेट बासमती (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, qty: 16, price: 180 },
-  { id: 14, name: { en: "Dettol Soap (75g)", te: "డెట్టాల్ సబ్బు (75g)", hi: "डेटॉल साबुन (75g)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, qty: 50, price: 42 },
-  { id: 15, name: { en: "Nescafe Classic (50g)", te: "నెస్కేఫ్ క్లాసిక్ (50g)", hi: "नेस्कैफे क्लासिक (50g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, qty: 14, price: 160 },
+const FULL_CATALOG: CatalogProduct[] = [
+  { id: 1, name: { en: "Tata Salt (1kg)", te: "టాటా ఉప్పు (1kg)", hi: "टाटा नमक (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 28 },
+  { id: 2, name: { en: "Amul Butter (500g)", te: "అముల్ వెన్న (500g)", hi: "अमूल मक्खन (500g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 270 },
+  { id: 3, name: { en: "Maggi Noodles (4-pack)", te: "మ్యాగీ నూడుల్స్ (4-ప్యాక్)", hi: "मैगी नूडल्स (4-पैक)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 56 },
+  { id: 4, name: { en: "Surf Excel (1kg)", te: "సర్ఫ్ ఎక్సెల్ (1kg)", hi: "सर्फ एक्सेल (1kg)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 199 },
+  { id: 5, name: { en: "Aashirvaad Atta (5kg)", te: "ఆశీర్వాద్ ఆటా (5kg)", hi: "आशीर्वाद आटा (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 295 },
+  { id: 6, name: { en: "Parle-G Biscuits", te: "పార్లే-జి బిస్కెట్లు", hi: "पार्ले-जी बिस्कुट" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 10 },
+  { id: 7, name: { en: "Brooke Bond Tea (250g)", te: "బ్రూక్ బాండ్ టీ (250g)", hi: "ब्रुक बॉन्ड चाय (250g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 110 },
+  { id: 8, name: { en: "Fortune Oil (1L)", te: "ఫార్చ్యూన్ ఆయిల్ (1L)", hi: "फॉर्च्यून तेल (1L)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 155 },
+  { id: 9, name: { en: "Amul Milk (500ml)", te: "అముల్ పాలు (500ml)", hi: "अमूल दूध (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 30 },
+  { id: 10, name: { en: "Colgate MaxFresh", te: "కోల్‌గేట్ మ్యాక్స్‌ఫ్రెష్", hi: "कोलगेट मैक्सफ्रेश" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 85 },
+  { id: 11, name: { en: "Haldiram Namkeen (200g)", te: "హల్దీరామ్ నమ్‌కీన్ (200g)", hi: "हल्दीराम नमकीन (200g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 45 },
+  { id: 12, name: { en: "Coca-Cola (750ml)", te: "కోకా-కోలా (750ml)", hi: "कोका-कोला (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 40 },
+  { id: 13, name: { en: "India Gate Basmati (1kg)", te: "ఇండియా గేట్ బాస్మతి (1kg)", hi: "इंडिया गेट बासमती (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 180 },
+  { id: 14, name: { en: "Dettol Soap (75g)", te: "డెట్టాల్ సబ్బు (75g)", hi: "डेटॉल साबुन (75g)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 42 },
+  { id: 15, name: { en: "Nescafe Classic (50g)", te: "నెస్కేఫ్ క్లాసిక్ (50g)", hi: "नेस्कैफे क्लासिक (50g)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 160 },
+  { id: 16, name: { en: "Sugar (1kg)", te: "చక్కెర (1kg)", hi: "चीनी (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 45 },
+  { id: 17, name: { en: "Toor Dal (1kg)", te: "కందిపప్పు (1kg)", hi: "तूर दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 140 },
+  { id: 18, name: { en: "Rice (5kg)", te: "బియ్యం (5kg)", hi: "चावल (5kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 320 },
+  { id: 19, name: { en: "Lays Chips", te: "లేస్ చిప్స్", hi: "लेज चिप्स" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 20 },
+  { id: 20, name: { en: "Vim Dishwash (500ml)", te: "విమ్ డిష్‌వాష్ (500ml)", hi: "विम डिशवॉश (500ml)" }, category: { en: "Personal Care", te: "పర్సనల్ కేర్", hi: "पर्सनल केयर" }, price: 55 },
+  { id: 21, name: { en: "Kurkure (100g)", te: "కుర్కురే (100g)", hi: "कुरकुरे (100g)" }, category: { en: "Snacks", te: "స్నాక్స్", hi: "स्नैक्स" }, price: 20 },
+  { id: 22, name: { en: "Curd (500ml)", te: "పెరుగు (500ml)", hi: "दही (500ml)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 30 },
+  { id: 23, name: { en: "Paneer (200g)", te: "పన్నీర్ (200g)", hi: "पनीर (200g)" }, category: { en: "Dairy", te: "డెయిరీ", hi: "डेयरी" }, price: 80 },
+  { id: 24, name: { en: "Chana Dal (1kg)", te: "శనగపప్పు (1kg)", hi: "चना दाल (1kg)" }, category: { en: "Grocery", te: "కిరాణా", hi: "किराना" }, price: 120 },
+  { id: 25, name: { en: "Thumbs Up (750ml)", te: "థమ్స్ అప్ (750ml)", hi: "थम्स अप (750ml)" }, category: { en: "Beverages", te: "పానీయాలు", hi: "पेय पदार्थ" }, price: 40 },
 ];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [newProduct, setNewProduct] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set([1, 2, 3, 5, 7, 9]));
+  const [customProducts, setCustomProducts] = useState<CatalogProduct[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [customName, setCustomName] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
-  const addProduct = () => {
-    if (!newProduct.trim()) return;
-    const name = { en: newProduct, te: newProduct, hi: newProduct };
-    const category = { en: "General", te: "సాధారణ", hi: "सामान्य" };
-    setProducts((prev) => [...prev, { id: Date.now(), name, category, qty: 1, price: 10 }]);
-    setNewProduct("");
+  const allProducts = [...FULL_CATALOG, ...customProducts];
+
+  const toggleProduct = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
   };
 
-  const deleteProduct = (id: number) => setProducts((prev) => prev.filter((p) => p.id !== id));
+  const removeCustom = (id: number) => {
+    setCustomProducts((prev) => prev.filter((p) => p.id !== id));
+    setSelectedIds((prev) => { const n = new Set(prev); n.delete(id); return n; });
+  };
+
+  const addCustomProduct = () => {
+    if (!customName.trim()) return;
+    const id = Date.now();
+    const name = { en: customName, te: customName, hi: customName };
+    const category = { en: "Other", te: "ఇతరాలు", hi: "अन्य" };
+    setCustomProducts((prev) => [...prev, { id, name, category, price: 0 }]);
+    setSelectedIds((prev) => new Set(prev).add(id));
+    setCustomName("");
+  };
 
   const toggleVoice = () => {
     if (isListening) { recognitionRef.current?.stop(); setIsListening(false); return; }
@@ -63,13 +89,28 @@ const Dashboard = () => {
     if (!SR) return;
     const recognition = new SR();
     recognition.lang = lang === "te" ? "te-IN" : lang === "hi" ? "hi-IN" : "en-IN";
-    recognition.onresult = (e: any) => { setNewProduct(e.results[0][0].transcript); setIsListening(false); };
+    recognition.onresult = (e: any) => { setCustomName(e.results[0][0].transcript); setIsListening(false); };
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
   };
+
+  const filteredCatalog = allProducts.filter((p) =>
+    p.name[lang].toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.category[lang].toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Group by category
+  const grouped = filteredCatalog.reduce<Record<string, CatalogProduct[]>>((acc, p) => {
+    const cat = p.category[lang];
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(p);
+    return acc;
+  }, {});
+
+  const myProducts = allProducts.filter((p) => selectedIds.has(p.id));
 
   const suggestions = [
     { text: t("suggestion1"), icon: "🌧️" },
@@ -78,10 +119,18 @@ const Dashboard = () => {
   ];
 
   const stats = [
-    { label: t("totalProducts"), value: products.length, icon: Package, color: "text-primary" },
+    { label: t("totalProducts"), value: myProducts.length, icon: Package, color: "text-primary" },
     { label: t("aiSuggestions"), value: suggestions.length, icon: Brain, color: "text-accent" },
-    { label: t("categories"), value: [...new Set(products.map((p) => p.category[lang]))].length, icon: TrendingUp, color: "text-primary" },
+    { label: t("categories"), value: [...new Set(myProducts.map((p) => p.category[lang]))].length, icon: TrendingUp, color: "text-primary" },
   ];
+
+  const selectAllLabel: Record<Language, string> = { en: "Select All", te: "అన్నీ ఎంచుకోండి", hi: "सभी चुनें" };
+  const clearAllLabel: Record<Language, string> = { en: "Clear All", te: "అన్నీ తీసివేయండి", hi: "सभी हटाएं" };
+  const myShopLabel: Record<Language, string> = { en: "My Shop Products", te: "నా దుకాణ ఉత్పత్తులు", hi: "मेरी दुकान के प्रोडक्ट" };
+  const catalogLabel: Record<Language, string> = { en: "Product Catalog — Select what's in your shop", te: "ఉత్పత్తి జాబితా — మీ దుకాణంలో ఉన్నవి ఎంచుకోండి", hi: "प्रोडक्ट कैटलॉग — अपनी दुकान में जो है वो चुनें" };
+  const otherLabel: Record<Language, string> = { en: "Product not listed? Add it here:", te: "ఉత్పత్తి జాబితాలో లేదా? ఇక్కడ జోడించండి:", hi: "प्रोडक्ट लिस्ट में नहीं है? यहाँ जोड़ें:" };
+  const searchLabel: Record<Language, string> = { en: "Search products...", te: "ఉత్పత్తులు వెతకండి...", hi: "प्रोडक्ट खोजें..." };
+  const customPlaceholder: Record<Language, string> = { en: "Type product name...", te: "ఉత్పత్తి పేరు టైప్ చేయండి...", hi: "प्रोडक्ट का नाम लिखें..." };
 
   return (
     <div className="min-h-screen gradient-bg">
@@ -160,73 +209,145 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Products */}
+        {/* Product Catalog — pick what's in your shop */}
         <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-          <div className="flex items-center gap-2 mb-5">
-            <Package className="w-4 h-4 text-primary" />
-            <h2 className="font-display font-semibold text-foreground">{t("productManagement")}</h2>
-            <span className="ml-auto text-xs text-muted-foreground">{products.length} {t("totalProducts").toLowerCase()}</span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-primary" />
+              <h2 className="font-display font-semibold text-foreground">{t("productManagement")}</h2>
+            </div>
+            <p className="text-xs text-muted-foreground sm:ml-2">{catalogLabel[lang]}</p>
           </div>
 
-          <div className="flex gap-2 mb-6">
+          {/* Search + actions */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-5">
             <div className="relative flex-1">
-              <input type="text" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addProduct()} placeholder={t("addProductPlaceholder")}
-                className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm" />
-              <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={searchLabel[lang]}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 text-sm"
+              />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setSelectedIds(new Set(allProducts.map((p) => p.id)))} className="px-3 py-2 rounded-xl bg-accent/15 text-accent text-xs font-medium hover:bg-accent/25 transition-colors">
+                {selectAllLabel[lang]}
+              </button>
+              <button onClick={() => setSelectedIds(new Set())} className="px-3 py-2 rounded-xl bg-destructive/15 text-destructive text-xs font-medium hover:bg-destructive/25 transition-colors">
+                {clearAllLabel[lang]}
               </button>
             </div>
-            <button onClick={addProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
-              <Plus className="w-4 h-4" /> {t("add")}
-            </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-muted-foreground">
-                  <th className="text-left py-3 px-2 font-medium">#</th>
-                  <th className="text-left py-3 px-2 font-medium">{t("product")}</th>
-                  <th className="text-left py-3 px-2 font-medium">{t("category")}</th>
-                  <th className="text-center py-3 px-2 font-medium">{t("qty")}</th>
-                  <th className="text-right py-3 px-2 font-medium">{t("price")}</th>
-                  <th className="text-right py-3 px-2 font-medium">{t("action")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((p, idx) => (
-                  <tr
-                    key={p.id}
-                    className="border-b border-border/50 hover:bg-secondary/30 hover:scale-[1.005] transition-all duration-200 origin-left"
-                    style={{ animation: `fadeSlideIn 0.35s ease-out ${idx * 0.04}s both` }}
-                  >
-                    <td className="py-3 px-2 text-muted-foreground text-xs">{idx + 1}</td>
-                    <td className="py-3 px-2 text-foreground font-medium">{p.name[lang]}</td>
-                    <td className="py-3 px-2">
-                      <span className="px-2 py-0.5 rounded-md bg-secondary text-xs text-secondary-foreground">{p.category[lang]}</span>
-                    </td>
-                    <td className="py-3 px-2 text-center text-muted-foreground">{p.qty}</td>
-                    <td className="py-3 px-2 text-right text-foreground font-medium">₹{p.price}</td>
-                    <td className="py-3 px-2 text-right">
-                      <button onClick={() => deleteProduct(p.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:scale-110 transition-all duration-200">
-                        <Trash2 className="w-4 h-4" />
+          {/* Grouped product grid */}
+          <div className="space-y-5 mb-6">
+            {Object.entries(grouped).map(([cat, items]) => (
+              <div key={cat}>
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{cat}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {items.map((p, idx) => {
+                    const isSelected = selectedIds.has(p.id);
+                    const isCustom = customProducts.some((c) => c.id === p.id);
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => toggleProduct(p.id)}
+                        className={`group flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] ${
+                          isSelected
+                            ? "bg-primary/10 border-primary/40 shadow-sm"
+                            : "bg-secondary/30 border-border hover:border-muted-foreground/30"
+                        }`}
+                        style={{ animation: `fadeSlideIn 0.3s ease-out ${idx * 0.03}s both` }}
+                      >
+                        <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-all duration-200 ${
+                          isSelected ? "bg-primary" : "bg-secondary border border-border"
+                        }`}>
+                          {isSelected && <Check className="w-3 h-3 text-primary-foreground" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-medium truncate transition-colors ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>
+                            {p.name[lang]}
+                          </p>
+                          {p.price > 0 && (
+                            <p className="text-xs text-muted-foreground">₹{p.price}</p>
+                          )}
+                        </div>
+                        {isCustom && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); removeCustom(p.id); }}
+                            className="p-1 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </button>
-                    </td>
-                  </tr>
-                ))}
-                {products.length === 0 && (
-                  <tr><td colSpan={6} className="py-8 text-center text-muted-foreground">{t("noProducts")}</td></tr>
-                )}
-              </tbody>
-            </table>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Add custom / "Other" product */}
+          <div className="border-t border-border pt-5">
+            <p className="text-xs text-muted-foreground mb-3">{otherLabel[lang]}</p>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && addCustomProduct()}
+                  placeholder={customPlaceholder[lang]}
+                  className="w-full px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300 pr-12 text-sm"
+                />
+                <button onClick={toggleVoice} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isListening ? "bg-destructive/20 text-destructive animate-pulse" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
+                  {isListening ? <Mic className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </button>
+              </div>
+              <button onClick={addCustomProduct} className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center gap-1.5 hover:brightness-110 active:scale-[0.97] transition-all duration-200">
+                <Plus className="w-4 h-4" /> {t("add")}
+              </button>
+            </div>
           </div>
         </section>
+
+        {/* My Shop Products summary */}
+        {myProducts.length > 0 && (
+          <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+            <div className="flex items-center gap-2 mb-4">
+              <Store className="w-4 h-4 text-accent" />
+              <h2 className="font-display font-semibold text-foreground">{myShopLabel[lang]}</h2>
+              <span className="ml-auto text-xs text-muted-foreground">{myProducts.length} items</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {myProducts.map((p, idx) => (
+                <span
+                  key={p.id}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-sm text-foreground transition-all duration-200 hover:bg-primary/20"
+                  style={{ animation: `fadeSlideIn 0.25s ease-out ${idx * 0.03}s both` }}
+                >
+                  {p.name[lang]}
+                  {p.price > 0 && <span className="text-xs text-muted-foreground">₹{p.price}</span>}
+                  <button
+                    onClick={() => toggleProduct(p.id)}
+                    className="ml-0.5 text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <style>{`
         @keyframes fadeSlideIn {
-          from { opacity: 0; transform: translateX(-8px); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; transform: translateY(6px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
     </div>
