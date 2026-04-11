@@ -403,6 +403,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
+          </div>
         </section>
 
         {/* My Shop Products summary */}
