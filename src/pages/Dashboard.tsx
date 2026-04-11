@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { transliterate } from "@/lib/transliterate";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 
@@ -17,6 +18,7 @@ interface CatalogProduct {
   id: number;
   name: Record<Language, string>;
   category: Record<Language, string>;
+  qty: number;
   price: number;
 }
 
@@ -55,6 +57,8 @@ const Dashboard = () => {
   const [customProducts, setCustomProducts] = useState<CatalogProduct[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [customName, setCustomName] = useState("");
+  const [customQty, setCustomQty] = useState("");
+  const [customPrice, setCustomPrice] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
@@ -76,11 +80,18 @@ const Dashboard = () => {
   const addCustomProduct = () => {
     if (!customName.trim()) return;
     const id = Date.now();
-    const name = { en: customName, te: customName, hi: customName };
+    const enName = customName;
+    const teName = transliterate(customName, "te");
+    const hiName = transliterate(customName, "hi");
+    const name = { en: enName, te: teName, hi: hiName };
     const category = { en: "Other", te: "ఇతరాలు", hi: "अन्य" };
-    setCustomProducts((prev) => [...prev, { id, name, category, price: 0 }]);
+    const qty = parseInt(customQty) || 1;
+    const price = parseInt(customPrice) || 0;
+    setCustomProducts((prev) => [...prev, { id, name, category, qty, price }]);
     setSelectedIds((prev) => new Set(prev).add(id));
     setCustomName("");
+    setCustomQty("");
+    setCustomPrice("");
   };
 
   const toggleVoice = () => {
