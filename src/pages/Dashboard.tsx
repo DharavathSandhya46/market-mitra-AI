@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { transliterate } from "@/lib/transliterate";
+import { searchDictionary, DictionaryItem } from "@/lib/productDictionary";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 
@@ -59,6 +59,7 @@ const Dashboard = () => {
   const [customName, setCustomName] = useState("");
   const [customQty, setCustomQty] = useState("");
   const [customPrice, setCustomPrice] = useState("");
+  const [suggestions, setSuggestions] = useState<DictionaryItem[]>([]);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
@@ -80,18 +81,48 @@ const Dashboard = () => {
   const addCustomProduct = () => {
     if (!customName.trim()) return;
     const id = Date.now();
-    const enName = customName;
-    const teName = transliterate(customName, "te");
-    const hiName = transliterate(customName, "hi");
-    const name = { en: enName, te: teName, hi: hiName };
-    const category = { en: "Other", te: "ఇతరాలు", hi: "अन्य" };
+    // Check if it matches a dictionary item
+    const matches = searchDictionary(customName);
+    const match = matches.length > 0 ? matches[0] : null;
+
+    const name = match
+      ? { en: match.en, te: match.te, hi: match.hi }
+      : { en: customName, te: customName, hi: customName };
+    const category = match
+      ? match.category
+      : { en: "Other", te: "ఇతరాలు", hi: "अन्य" };
     const qty = parseInt(customQty) || 1;
-    const price = parseInt(customPrice) || 0;
+    const price = parseInt(customPrice) || (match ? match.price : 0);
     setCustomProducts((prev) => [...prev, { id, name, category, qty, price }]);
     setSelectedIds((prev) => new Set(prev).add(id));
     setCustomName("");
     setCustomQty("");
     setCustomPrice("");
+    setSuggestions([]);
+  };
+
+  const handleNameChange = (value: string) => {
+    setCustomName(value);
+    if (value.trim().length >= 1) {
+      setSuggestions(searchDictionary(value).slice(0, 6));
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const pickSuggestion = (item: DictionaryItem) => {
+    const id = Date.now();
+    const qty = parseInt(customQty) || 1;
+    const price = parseInt(customPrice) || item.price;
+    setCustomProducts((prev) => [
+      ...prev,
+      { id, name: { en: item.en, te: item.te, hi: item.hi }, category: item.category, qty, price },
+    ]);
+    setSelectedIds((prev) => new Set(prev).add(id));
+    setCustomName("");
+    setCustomQty("");
+    setCustomPrice("");
+    setSuggestions([]);
   };
 
   const toggleVoice = () => {
