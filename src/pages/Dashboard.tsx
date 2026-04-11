@@ -373,6 +373,7 @@ const Dashboard = () => {
                   style={{ animation: `fadeSlideIn 0.25s ease-out ${idx * 0.03}s both` }}
                 >
                   {p.name[lang]}
+                  {p.qty > 0 && <span className="text-xs text-muted-foreground">x{p.qty}</span>}
                   {p.price > 0 && <span className="text-xs text-muted-foreground">₹{p.price}</span>}
                   <button
                     onClick={() => toggleProduct(p.id)}
