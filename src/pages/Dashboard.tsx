@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { Package, Brain, TrendingUp, Mic, MicOff, Plus, Trash2, LogOut, Store, BarChart3, Check, Search, X, AlertTriangle, Bell, Star, ShoppingCart } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Area, AreaChart } from "recharts";
 import { searchDictionary, DictionaryItem } from "@/lib/productDictionary";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
