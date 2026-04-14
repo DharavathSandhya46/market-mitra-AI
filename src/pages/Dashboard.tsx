@@ -268,7 +268,7 @@ const Dashboard = () => {
             </div>
             <div className="space-y-3">
               {suggestions.map((s, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-secondary/40 border border-border hover:border-accent/30 transition-colors duration-300">
+                <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-secondary/40 border border-border hover:border-accent/30 transition-all duration-300 hover:scale-[1.01]">
                   <span className="text-lg mt-0.5">{s.icon}</span>
                   <p className="text-sm text-secondary-foreground leading-relaxed">{s.text}</p>
                 </div>
@@ -277,14 +277,119 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Product Catalog — pick what's in your shop */}
-        <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
-            <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 text-primary" />
-              <h2 className="font-display font-semibold text-foreground">{t("productManagement")}</h2>
+        {/* 🎤 Voice Hint Banner */}
+        <section className="animate-fade-in-up" style={{ animationDelay: "0.45s" }}>
+          <div className="glass-card p-4 flex items-center gap-4 border-l-4 border-l-primary">
+            <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center animate-pulse">
+              <Mic className="w-5 h-5 text-primary" />
             </div>
-            <p className="text-xs text-muted-foreground sm:ml-2">{catalogLabel[lang]}</p>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">{t("voiceHint")}</p>
+              {isListening && (
+                <p className="text-xs text-primary mt-0.5 animate-pulse">{t("voiceListening")}</p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* 📊 AI Best-Selling Suggestions */}
+        <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Star className="w-4 h-4 text-primary" />
+            <h2 className="font-display font-semibold text-foreground">{t("aiBestSellers")}</h2>
+          </div>
+          <p className="text-xs text-muted-foreground mb-4">{t("aiBestDesc")}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {bestSellers.map((item, i) => (
+              <div
+                key={i}
+                className="group flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 hover:scale-[1.02]"
+                style={{ animation: `fadeSlideIn 0.35s ease-out ${i * 0.07}s both` }}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{item.reason}</p>
+                </div>
+                <span className="text-xs font-semibold text-accent whitespace-nowrap">{item.trend}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 🔔 Low Stock Alerts */}
+        {lowStockItems.length > 0 && (
+          <section className="glass-card p-6 animate-fade-in-up border-l-4 border-l-destructive" style={{ animationDelay: "0.55s" }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Bell className="w-4 h-4 text-destructive" />
+              <h2 className="font-display font-semibold text-foreground">{t("lowStockAlerts")}</h2>
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-destructive/15 text-destructive text-xs font-semibold">{lowStockItems.length}</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4">{t("lowStockDesc")}</p>
+            <div className="space-y-2">
+              {lowStockItems.map((p, i) => {
+                const isCritical = p.qty <= 5;
+                return (
+                  <div
+                    key={p.id}
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 hover:scale-[1.01] ${
+                      isCritical
+                        ? "bg-destructive/10 border-destructive/30"
+                        : "bg-yellow-500/10 border-yellow-500/30"
+                    }`}
+                    style={{ animation: `fadeSlideIn 0.3s ease-out ${i * 0.05}s both` }}
+                  >
+                    <AlertTriangle className={`w-4 h-4 shrink-0 ${isCritical ? "text-destructive" : "text-yellow-500"}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{p.name[lang]}</p>
+                      <p className="text-xs text-muted-foreground">{p.category[lang]}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-sm font-bold ${isCritical ? "text-destructive" : "text-yellow-500"}`}>
+                        {p.qty} {t("lowStockUnit")}
+                      </p>
+                      <span className={`text-[10px] font-semibold uppercase ${isCritical ? "text-destructive" : "text-yellow-500"}`}>
+                        {isCritical ? t("lowStockCritical") : t("lowStockWarning")}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* 📈 Daily Sales Chart */}
+        <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+          <div className="flex items-center gap-2 mb-1">
+            <ShoppingCart className="w-4 h-4 text-accent" />
+            <h2 className="font-display font-semibold text-foreground">{t("dailySales")}</h2>
+            <span className="ml-auto text-xs text-muted-foreground">
+              {t("today")}: <span className="text-foreground font-semibold">₹{dailySalesData[dailySalesData.length - 1]?.sales?.toLocaleString()}</span>
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-4">{t("dailySalesDesc")}</p>
+          <div className="h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailySalesData}>
+                <defs>
+                  <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(160,60%,45%)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(160,60%,45%)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(225,15%,25%)" />
+                <XAxis dataKey="day" tick={{ fill: "hsl(215,12%,55%)", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "hsl(215,12%,55%)", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${v}`} />
+                <Tooltip
+                  contentStyle={{ background: "hsl(225,20%,12%)", border: "1px solid hsl(225,15%,25%)", borderRadius: "12px", color: "#fff", fontSize: "13px" }}
+                  formatter={(value: number) => [`₹${value.toLocaleString()}`, t("salesAmount")]}
+                />
+                <Area type="monotone" dataKey="sales" stroke="hsl(160,60%,45%)" strokeWidth={2.5} fill="url(#salesGrad)" dot={{ fill: "hsl(160,60%,45%)", r: 4, strokeWidth: 0 }} activeDot={{ r: 6, fill: "hsl(160,60%,45%)" }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
           </div>
 
           {/* Search + actions */}
