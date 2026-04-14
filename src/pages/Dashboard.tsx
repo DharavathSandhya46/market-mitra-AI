@@ -390,6 +390,15 @@ const Dashboard = () => {
             </ResponsiveContainer>
           </div>
         </section>
+
+        {/* Product Catalog — pick what's in your shop */}
+        <section className="glass-card p-6 animate-fade-in-up" style={{ animationDelay: "0.65s" }}>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-primary" />
+              <h2 className="font-display font-semibold text-foreground">{t("productManagement")}</h2>
+            </div>
+            <p className="text-xs text-muted-foreground sm:ml-2">{catalogLabel[lang]}</p>
           </div>
 
           {/* Search + actions */}
