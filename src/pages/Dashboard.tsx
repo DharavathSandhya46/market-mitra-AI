@@ -154,6 +154,25 @@ const Dashboard = () => {
 
   const myProducts = allProducts.filter((p) => selectedIds.has(p.id));
 
+  // Low stock items (qty <= 10)
+  const lowStockItems = useMemo(() => myProducts.filter(p => p.qty <= 10).sort((a, b) => a.qty - b.qty), [myProducts]);
+
+  // Daily sales mock data
+  const dailySalesData = useMemo(() => {
+    const days = [t("monday"), t("tuesday"), t("wednesday"), t("thursday"), t("friday"), t("saturday"), t("sunday")];
+    const values = [1250, 1480, 980, 1650, 2100, 2800, 1900];
+    return days.map((day, i) => ({ day, sales: values[i] }));
+  }, [lang]);
+
+  // AI best sellers
+  const bestSellers = useMemo(() => [
+    { name: t("bestSeller1"), reason: t("bestSellerReason1"), trend: "+45%", icon: "🔥" },
+    { name: t("bestSeller2"), reason: t("bestSellerReason2"), trend: "+32%", icon: "⭐" },
+    { name: t("bestSeller3"), reason: t("bestSellerReason3"), trend: "+40%", icon: "📈" },
+    { name: t("bestSeller4"), reason: t("bestSellerReason4"), trend: "+30%", icon: "🚀" },
+    { name: t("bestSeller5"), reason: t("bestSellerReason5"), trend: "+22%", icon: "☕" },
+  ], [lang]);
+
   const suggestions = [
     { text: t("suggestion1"), icon: "🌧️" },
     { text: t("suggestion2"), icon: "📈" },
