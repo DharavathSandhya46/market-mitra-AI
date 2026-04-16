@@ -19,11 +19,18 @@ const translations = {
     tip3: "🔔 Get alerts when stock is running low",
     tip4: "📈 Track daily sales with smart charts",
 
-    // Dashboard
+    // Nav
+    dashboard: "Dashboard",
+    addProduct: "Add Product",
+    productList: "Product List",
+    analytics: "Analytics",
     logout: "Logout",
+
+    // Dashboard
     totalProducts: "Total Products",
     aiSuggestions: "AI Suggestions",
     categories: "Categories",
+    totalValue: "Total Value",
     categoryDistribution: "Category Distribution",
     aiInsights: "AI Insights",
     productManagement: "Product Management",
@@ -45,9 +52,12 @@ const translations = {
     suggestion2: "Maggi noodles trending +30% in your area this week",
     suggestion3: "Consider adding fresh milk delivery — 12 nearby shops don't offer it",
     selectLanguage: "Language",
+
     // Voice
     voiceHint: "🎤 Tap mic to add products by voice!",
     voiceListening: "Listening...",
+    voiceNotSupported: "Voice not supported in this browser",
+
     // AI Best Sellers
     aiBestSellers: "AI Best-Selling Suggestions",
     aiBestDesc: "Top items selling in your area — consider stocking these!",
@@ -61,12 +71,14 @@ const translations = {
     bestSellerReason3: "Weekend demand up 40%",
     bestSellerReason4: "Trending +30% this week",
     bestSellerReason5: "Daily staple — consistent seller",
+
     // Low Stock Alerts
     lowStockAlerts: "Low Stock Alerts",
     lowStockDesc: "These items are running low — reorder soon!",
     lowStockUnit: "left",
     lowStockCritical: "Critical",
     lowStockWarning: "Warning",
+
     // Daily Sales
     dailySales: "Daily Sales Tracker",
     dailySalesDesc: "Your shop's sales trend this week",
@@ -79,6 +91,36 @@ const translations = {
     friday: "Fri",
     saturday: "Sat",
     sunday: "Sun",
+
+    // Add Product Modal
+    addNewProduct: "Add New Product",
+    productName: "Product Name",
+    productNamePlaceholder: "Type product name (e.g. sugar, salt)...",
+    salesCount: "Sales Count",
+    cancel: "Cancel",
+    save: "Save Product",
+    orSpeakName: "or speak the name",
+
+    // Product List
+    searchProducts: "Search products...",
+    deleteProduct: "Delete",
+    noProductsFound: "No products found",
+    allCategories: "All Categories",
+    items: "items",
+
+    // Help
+    helpTitle: "Quick Help",
+    helpAdd: "Click + to add a product",
+    helpVoice: "Use mic 🎤 to speak product name",
+    helpSearch: "Search by typing in English",
+    helpDelete: "Swipe or click 🗑 to remove",
+    gotIt: "Got it!",
+
+    // Tooltips
+    tooltipAdd: "Add new product",
+    tooltipMic: "Speak product name",
+    tooltipDelete: "Remove this product",
+    tooltipSearch: "Search products",
   },
   te: {
     appName: "మార్కెట్‌మిత్ర AI",
@@ -94,10 +136,17 @@ const translations = {
     tip2: "📊 మీ ప్రాంతంలో బాగా అమ్ముడవుతున్న వస్తువులను AI సూచిస్తుంది",
     tip3: "🔔 స్టాక్ తక్కువగా ఉన్నప్పుడు అలర్ట్‌లు పొందండి",
     tip4: "📈 స్మార్ట్ చార్ట్‌లతో రోజువారీ అమ్మకాలను ట్రాక్ చేయండి",
+
+    dashboard: "డాష్‌బోర్డ్",
+    addProduct: "ఉత్పత్తి జోడించు",
+    productList: "ఉత్పత్తుల జాబితా",
+    analytics: "విశ్లేషణలు",
     logout: "లాగ్‌అవుట్",
+
     totalProducts: "మొత్తం ఉత్పత్తులు",
     aiSuggestions: "AI సూచనలు",
     categories: "వర్గాలు",
+    totalValue: "మొత్తం విలువ",
     categoryDistribution: "వర్గ పంపిణీ",
     aiInsights: "AI అంతర్దృష్టులు",
     productManagement: "ఉత్పత్తి నిర్వహణ",
@@ -121,6 +170,7 @@ const translations = {
     selectLanguage: "భాష",
     voiceHint: "🎤 వాయిస్‌తో ఉత్పత్తులను జోడించడానికి మైక్ నొక్కండి!",
     voiceListening: "వింటోంది...",
+    voiceNotSupported: "ఈ బ్రౌజర్‌లో వాయిస్ సపోర్ట్ లేదు",
     aiBestSellers: "AI బెస్ట్‌సెల్లింగ్ సూచనలు",
     aiBestDesc: "మీ ప్రాంతంలో ఎక్కువగా అమ్ముడవుతున్న వస్తువులు — వీటిని స్టాక్ చేయండి!",
     bestSeller1: "పార్లే-జి బిస్కెట్లు",
@@ -149,6 +199,32 @@ const translations = {
     friday: "శుక్ర",
     saturday: "శని",
     sunday: "ఆది",
+
+    addNewProduct: "కొత్త ఉత్పత్తి జోడించు",
+    productName: "ఉత్పత్తి పేరు",
+    productNamePlaceholder: "English లో టైప్ చేయండి (uppu, bellam, pasupu)...",
+    salesCount: "అమ్మకాల సంఖ్య",
+    cancel: "రద్దు",
+    save: "ఉత్పత్తి సేవ్ చేయి",
+    orSpeakName: "లేదా పేరు చెప్పండి",
+
+    searchProducts: "English లో టైప్ చేయండి... (uppu, pasupu...)",
+    deleteProduct: "తొలగించు",
+    noProductsFound: "ఉత్పత్తులు కనుగొనబడలేదు",
+    allCategories: "అన్ని వర్గాలు",
+    items: "వస్తువులు",
+
+    helpTitle: "త్వరిత సహాయం",
+    helpAdd: "+ నొక్కి ఉత్పత్తి జోడించండి",
+    helpVoice: "మైక్ 🎤 ఉపయోగించి ఉత్పత్తి పేరు చెప్పండి",
+    helpSearch: "English లో టైప్ చేసి వెతకండి",
+    helpDelete: "🗑 నొక్కి తొలగించండి",
+    gotIt: "అర్థమైంది!",
+
+    tooltipAdd: "కొత్త ఉత్పత్తి జోడించు",
+    tooltipMic: "ఉత్పత్తి పేరు చెప్పండి",
+    tooltipDelete: "ఈ ఉత్పత్తిని తొలగించు",
+    tooltipSearch: "ఉత్పత్తులు వెతకండి",
   },
   hi: {
     appName: "मार्केटमित्र AI",
@@ -164,10 +240,17 @@ const translations = {
     tip2: "📊 AI आपके क्षेत्र में सबसे ज्यादा बिकने वाली चीज़ें सुझाएगा",
     tip3: "🔔 स्टॉक कम होने पर अलर्ट पाएं",
     tip4: "📈 स्मार्ट चार्ट से रोज़ की बिक्री ट्रैक करें",
+
+    dashboard: "डैशबोर्ड",
+    addProduct: "प्रोडक्ट जोड़ें",
+    productList: "प्रोडक्ट सूची",
+    analytics: "एनालिटिक्स",
     logout: "लॉग आउट",
+
     totalProducts: "कुल प्रोडक्ट",
     aiSuggestions: "AI सुझाव",
     categories: "श्रेणियाँ",
+    totalValue: "कुल मूल्य",
     categoryDistribution: "श्रेणी वितरण",
     aiInsights: "AI अंतर्दृष्टि",
     productManagement: "प्रोडक्ट प्रबंधन",
@@ -191,6 +274,7 @@ const translations = {
     selectLanguage: "भाषा",
     voiceHint: "🎤 वॉयस से प्रोडक्ट जोड़ने के लिए माइक पर टैप करें!",
     voiceListening: "सुन रहा है...",
+    voiceNotSupported: "इस ब्राउज़र में वॉयस सपोर्ट नहीं है",
     aiBestSellers: "AI बेस्ट-सेलिंग सुझाव",
     aiBestDesc: "आपके क्षेत्र में सबसे ज़्यादा बिकने वाली चीज़ें — इन्हें स्टॉक करें!",
     bestSeller1: "पार्ले-जी बिस्कुट",
@@ -219,6 +303,32 @@ const translations = {
     friday: "शुक्र",
     saturday: "शनि",
     sunday: "रवि",
+
+    addNewProduct: "नया प्रोडक्ट जोड़ें",
+    productName: "प्रोडक्ट का नाम",
+    productNamePlaceholder: "English में लिखें (namak, cheeni, haldi)...",
+    salesCount: "बिक्री संख्या",
+    cancel: "रद्द करें",
+    save: "प्रोडक्ट सेव करें",
+    orSpeakName: "या नाम बोलें",
+
+    searchProducts: "English में टाइप करें... (namak, haldi...)",
+    deleteProduct: "हटाएं",
+    noProductsFound: "कोई प्रोडक्ट नहीं मिला",
+    allCategories: "सभी श्रेणियाँ",
+    items: "आइटम",
+
+    helpTitle: "त्वरित सहायता",
+    helpAdd: "+ दबाकर प्रोडक्ट जोड़ें",
+    helpVoice: "माइक 🎤 से प्रोडक्ट का नाम बोलें",
+    helpSearch: "English में टाइप करके खोजें",
+    helpDelete: "🗑 दबाकर हटाएं",
+    gotIt: "समझ गया!",
+
+    tooltipAdd: "नया प्रोडक्ट जोड़ें",
+    tooltipMic: "प्रोडक्ट का नाम बोलें",
+    tooltipDelete: "यह प्रोडक्ट हटाएं",
+    tooltipSearch: "प्रोडक्ट खोजें",
   },
 } as const;
 
