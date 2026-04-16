@@ -6,6 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import DashboardHome from "./pages/DashboardHome.tsx";
+import AddProductPage from "./pages/AddProductPage.tsx";
+import ProductListPage from "./pages/ProductListPage.tsx";
+import AnalyticsPage from "./pages/AnalyticsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -19,7 +23,12 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index element={<DashboardHome />} />
+              <Route path="add" element={<AddProductPage />} />
+              <Route path="products" element={<ProductListPage />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
