@@ -105,6 +105,16 @@ const ThemeWallpaperPicker = () => {
                 })}
               </div>
             </div>
+
+            {/* Done button */}
+            <div className="mt-6 pt-4 border-t border-border flex justify-end gap-3 sticky bottom-0 bg-background/80 backdrop-blur-sm -mx-6 px-6 pb-1">
+              <button
+                onClick={() => setOpen(false)}
+                className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-all glow-primary"
+              >
+                {t("done" as any) || "Done"}
+              </button>
+            </div>
           </div>
         </div>
       )}
