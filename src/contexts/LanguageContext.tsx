@@ -232,6 +232,12 @@ const translations = {
     tooltipMic: "ఉత్పత్తి పేరు చెప్పండి",
     tooltipDelete: "ఈ ఉత్పత్తిని తొలగించు",
     tooltipSearch: "ఉత్పత్తులు వెతకండి",
+
+    appearance: "రూపం",
+    theme: "థీమ్",
+    darkMode: "డార్క్",
+    lightMode: "లైట్",
+    wallpaper: "వాల్‌పేపర్",
   },
   hi: {
     appName: "मार्केटमित्र AI",
@@ -336,6 +342,12 @@ const translations = {
     tooltipMic: "प्रोडक्ट का नाम बोलें",
     tooltipDelete: "यह प्रोडक्ट हटाएं",
     tooltipSearch: "प्रोडक्ट खोजें",
+
+    appearance: "रूप",
+    theme: "थीम",
+    darkMode: "डार्क",
+    lightMode: "लाइट",
+    wallpaper: "वॉलपेपर",
   },
 } as const;
 
