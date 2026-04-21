@@ -4,7 +4,8 @@ import { LayoutDashboard, PlusCircle, Package, BarChart3, LogOut, Store, Menu, X
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import HelpBox from "@/components/HelpBox";
-import dashboardBg from "@/assets/dashboard-bg.jpg";
+import { useTheme } from "@/contexts/ThemeContext";
+import ThemeWallpaperPicker from "@/components/ThemeWallpaperPicker";
 
 const navItems = [
   { key: "dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -19,11 +20,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const { wallpaper } = useTheme();
 
   return (
     <div className="min-h-screen relative">
       {/* Background */}
-      <img src={dashboardBg} alt="" className="fixed inset-0 w-full h-full object-cover" width={1920} height={1080} />
+      <img src={wallpaper.src} alt="" className="fixed inset-0 w-full h-full object-cover" width={1920} height={1080} />
       <div className="fixed inset-0 bg-background/90 backdrop-blur-sm" />
 
       <div className="relative z-10 flex min-h-screen">
@@ -87,6 +89,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex-1" />
+            <ThemeWallpaperPicker />
             <button
               onClick={() => setShowHelp(!showHelp)}
               className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-200"
