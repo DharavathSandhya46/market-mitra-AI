@@ -5,7 +5,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
-  :root {
+  :root,
+  .dark {
     --background: 225 25% 8%;
     --foreground: 210 20% 92%;
 
@@ -49,6 +50,50 @@
     --sidebar-accent-foreground: 210 20% 85%;
     --sidebar-border: 225 15% 20%;
     --sidebar-ring: 28 100% 55%;
+  }
+
+  .light {
+    --background: 30 30% 97%;
+    --foreground: 225 30% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 225 30% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 30% 12%;
+
+    --primary: 22 95% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 20% 92%;
+    --secondary-foreground: 225 30% 18%;
+
+    --muted: 30 18% 90%;
+    --muted-foreground: 225 12% 40%;
+
+    --accent: 160 55% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 15% 85%;
+    --input: 30 15% 85%;
+    --ring: 22 95% 50%;
+
+    --glass-bg: 0 0% 100%;
+    --glass-border: 30 20% 80%;
+    --gradient-start: 30 30% 95%;
+    --gradient-end: 30 25% 90%;
+
+    --sidebar-background: 30 25% 95%;
+    --sidebar-foreground: 225 30% 18%;
+    --sidebar-primary: 22 95% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 20% 90%;
+    --sidebar-accent-foreground: 225 30% 18%;
+    --sidebar-border: 30 15% 85%;
+    --sidebar-ring: 22 95% 50%;
   }
 }
 
