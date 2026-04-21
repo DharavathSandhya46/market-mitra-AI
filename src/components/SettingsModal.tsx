@@ -89,12 +89,12 @@ const SettingsModal = () => {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in-up"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in-up overflow-y-auto"
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           <div
-            className="glass-card-strong w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in rounded-2xl"
-            style={{ animation: "scale-in 0.2s ease-out" }}
+            className="glass-card-strong w-full max-w-[500px] max-h-[90vh] my-auto overflow-hidden flex flex-col relative rounded-2xl shadow-2xl"
+            style={{ animation: "scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)" }}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-border bg-gradient-to-r from-primary/10 to-transparent">
