@@ -20,17 +20,20 @@ const ThemeWallpaperPicker = () => {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-          <div className="glass-card-strong w-full max-w-2xl p-6 max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-5">
+          <div className="glass-card-strong w-full max-w-2xl p-6 max-h-[85vh] overflow-y-auto relative">
+            {/* Sticky close button - always visible */}
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-destructive/90 hover:bg-destructive text-destructive-foreground shadow-lg hover:scale-110 transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center justify-between mb-5 pr-12">
               <h2 className="font-display text-xl font-bold gradient-text">
                 {t("appearance" as any) || "Appearance"}
               </h2>
-              <button
-                onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-secondary/60 text-muted-foreground hover:text-foreground"
-              >
-                <X className="w-5 h-5" />
-              </button>
             </div>
 
             {/* Theme toggle */}
@@ -101,6 +104,16 @@ const ThemeWallpaperPicker = () => {
                   );
                 })}
               </div>
+            </div>
+
+            {/* Done button */}
+            <div className="mt-6 pt-4 border-t border-border flex justify-end gap-3 sticky bottom-0 bg-background/80 backdrop-blur-sm -mx-6 px-6 pb-1">
+              <button
+                onClick={() => setOpen(false)}
+                className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-all glow-primary"
+              >
+                {t("done" as any) || "Done"}
+              </button>
             </div>
           </div>
         </div>
