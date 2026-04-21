@@ -1,12 +1,44 @@
-import { useState } from "react";
-import { Palette, Sun, Moon, Check, X } from "lucide-react";
-import { useTheme, wallpapers } from "@/contexts/ThemeContext";
+import { useRef, useState } from "react";
+import { Palette, Sun, Moon, Check, X, Upload, Trash2 } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 
 const ThemeWallpaperPicker = () => {
   const [open, setOpen] = useState(false);
-  const { theme, toggleTheme, wallpaper, setWallpaperId } = useTheme();
+  const {
+    theme,
+    toggleTheme,
+    wallpaper,
+    setWallpaperId,
+    allWallpapers,
+    uploadCustomWallpaper,
+    removeCustomWallpaper,
+  } = useTheme();
   const { t } = useLanguage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error("Image too large (max 4MB)");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      uploadCustomWallpaper(dataUrl, file.name.replace(/\.[^.]+$/, ""));
+      toast.success("Custom wallpaper applied");
+    };
+    reader.onerror = () => toast.error("Failed to read image");
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
 
   return (
     <>
@@ -21,7 +53,6 @@ const ThemeWallpaperPicker = () => {
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
           <div className="glass-card-strong w-full max-w-2xl p-6 max-h-[85vh] overflow-y-auto relative">
-            {/* Sticky close button - always visible */}
             <button
               onClick={() => setOpen(false)}
               aria-label="Close"
@@ -71,11 +102,28 @@ const ThemeWallpaperPicker = () => {
 
             {/* Wallpapers */}
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                {t("wallpaper" as any) || "Wallpaper"}
-              </h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("wallpaper" as any) || "Wallpaper"}
+                </h3>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFile}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/15 text-primary hover:bg-primary/25 transition-all text-xs font-medium"
+                >
+                  <Upload className="w-4 h-4" />
+                  Upload Your Shop Image
+                </button>
+              </div>
+
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {wallpapers.map((w) => {
+                {allWallpapers.map((w) => {
                   const active = wallpaper.id === w.id;
                   return (
                     <button
@@ -92,27 +140,47 @@ const ThemeWallpaperPicker = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                      <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between">
-                        <span className="text-xs font-medium text-white truncate">{w.name}</span>
+                      <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-white truncate">
+                          {w.name}
+                          {w.custom && " ★"}
+                        </span>
                         {active && (
-                          <span className="bg-primary rounded-full p-0.5">
+                          <span className="bg-primary rounded-full p-0.5 shrink-0">
                             <Check className="w-3 h-3 text-primary-foreground" />
                           </span>
                         )}
                       </div>
+                      {w.custom && (
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeCustomWallpaper();
+                            toast.success("Custom wallpaper removed");
+                          }}
+                          className="absolute top-1.5 right-1.5 p-1 rounded-md bg-destructive/90 text-destructive-foreground hover:scale-110 transition-transform"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                Tip: Upload a photo of your own shop to personalize your dashboard. Saved on this device only.
+              </p>
             </div>
 
-            {/* Done button */}
+            {/* Apply / Done */}
             <div className="mt-6 pt-4 border-t border-border flex justify-end gap-3 sticky bottom-0 bg-background/80 backdrop-blur-sm -mx-6 px-6 pb-1">
               <button
                 onClick={() => setOpen(false)}
                 className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-all glow-primary"
               >
-                {t("done" as any) || "Done"}
+                Apply
               </button>
             </div>
           </div>
