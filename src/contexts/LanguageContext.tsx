@@ -121,6 +121,13 @@ const translations = {
     tooltipMic: "Speak product name",
     tooltipDelete: "Remove this product",
     tooltipSearch: "Search products",
+
+    // Appearance
+    appearance: "Appearance",
+    theme: "Theme",
+    darkMode: "Dark",
+    lightMode: "Light",
+    wallpaper: "Wallpaper",
   },
   te: {
     appName: "మార్కెట్‌మిత్ర AI",
