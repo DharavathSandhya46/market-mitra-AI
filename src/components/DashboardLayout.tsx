@@ -5,7 +5,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import HelpBox from "@/components/HelpBox";
 import { useTheme } from "@/contexts/ThemeContext";
-import ThemeWallpaperPicker from "@/components/ThemeWallpaperPicker";
+import SettingsModal from "@/components/SettingsModal";
 
 const navItems = [
   { key: "dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -89,7 +89,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex-1" />
-            <ThemeWallpaperPicker />
+            <SettingsModal />
             <button
               onClick={() => setShowHelp(!showHelp)}
               className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-200"
