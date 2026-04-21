@@ -169,7 +169,7 @@ const SettingsModal = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   {allWallpapers.map((w) => {
                     const active = draftWallpaperId === w.id;
                     return (
