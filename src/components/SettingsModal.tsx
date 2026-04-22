@@ -295,7 +295,8 @@ const SettingsModal = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-border bg-background/60 flex justify-end gap-3">
+            {/* Footer (fixed) */}
+            <div className="p-4 border-t border-white/10 bg-black/40 flex justify-end gap-3 rounded-b-2xl shrink-0">
               <button
                 onClick={() => setOpen(false)}
                 className="px-5 py-2.5 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-all"
