@@ -142,7 +142,7 @@ const SettingsModal = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 w-full max-w-3xl mx-auto">
               <section className="rounded-xl p-3" style={sectionStyle}>
                 <div className="flex items-center gap-2 mb-3">
                   <Palette className="w-4 h-4 text-primary" />
