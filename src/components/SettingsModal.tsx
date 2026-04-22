@@ -89,15 +89,21 @@ const SettingsModal = () => {
 
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in-up overflow-y-auto"
+          className="fixed inset-0 z-[9998] flex items-center justify-center p-4 backdrop-blur-md animate-fade-in-up"
+          style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           <div
-            className="glass-card-strong w-full max-w-[500px] max-h-[90vh] my-auto overflow-hidden flex flex-col relative rounded-2xl shadow-2xl"
-            style={{ animation: "scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="w-full max-w-[500px] max-h-[90vh] flex flex-col relative rounded-2xl z-[9999] text-foreground"
+            style={{
+              animation: "scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+              backgroundColor: "hsl(222 47% 11%)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+            }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-border bg-gradient-to-r from-primary/10 to-transparent">
+            {/* Header (fixed) */}
+            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-r from-primary/15 to-transparent rounded-t-2xl shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center glow-primary">
                   <Settings className="w-5 h-5 text-primary" />
