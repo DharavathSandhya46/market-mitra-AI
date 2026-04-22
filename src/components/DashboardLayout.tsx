@@ -25,8 +25,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen relative">
       {/* Background */}
-      <img src={wallpaper.src} alt="" className="fixed inset-0 w-full h-full object-cover" width={1920} height={1080} />
-      <div className="fixed inset-0 bg-background/85 backdrop-blur-sm" />
+      <img src={wallpaper.src} alt="" className="fixed inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} />
+      <div className="fixed inset-0 bg-background/95 backdrop-blur-md" />
 
       <div className="relative z-10 flex min-h-screen">
         {/* Mobile overlay */}
