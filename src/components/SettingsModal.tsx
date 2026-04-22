@@ -108,18 +108,18 @@ const SettingsModal = () => {
 
       {open && (
         <div
-          className="fixed inset-0 z-[9998] flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto backdrop-blur-md animate-fade-in-up"
+          className="fixed inset-0 z-[9998] backdrop-blur-md animate-fade-in-up"
           style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
-          onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           <div
-            className="w-full max-w-[500px] my-auto max-h-[calc(100vh-1rem)] sm:max-h-[90vh] flex flex-col relative rounded-2xl z-[9999] overflow-hidden"
+            className="fixed inset-0 w-screen h-screen flex flex-col rounded-none z-[9999] overflow-hidden"
             style={{
               ...panelStyle,
+              border: "none",
               animation: "scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            <div className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl shrink-0">
+            <div className="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -142,7 +142,7 @@ const SettingsModal = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 w-full max-w-3xl mx-auto">
               <section className="rounded-xl p-3" style={sectionStyle}>
                 <div className="flex items-center gap-2 mb-3">
                   <Palette className="w-4 h-4 text-primary" />
@@ -336,7 +336,7 @@ const SettingsModal = () => {
               </section>
             </div>
 
-            <div className="p-4 border-t border-white/10 flex justify-end gap-3 rounded-b-2xl shrink-0" style={panelStyle}>
+            <div className="p-4 border-t border-white/10 flex justify-end gap-3 shrink-0" style={panelStyle}>
               <button
                 onClick={() => setOpen(false)}
                 className="px-5 py-2.5 rounded-xl font-medium transition-all text-white"
