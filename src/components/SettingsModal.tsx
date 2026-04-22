@@ -108,18 +108,18 @@ const SettingsModal = () => {
 
       {open && (
         <div
-          className="fixed inset-0 z-[9998] flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto backdrop-blur-md animate-fade-in-up"
+          className="fixed inset-0 z-[9998] backdrop-blur-md animate-fade-in-up"
           style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
-          onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           <div
-            className="w-full max-w-[500px] my-auto max-h-[calc(100vh-1rem)] sm:max-h-[90vh] flex flex-col relative rounded-2xl z-[9999] overflow-hidden"
+            className="fixed inset-0 w-screen h-screen flex flex-col rounded-none z-[9999] overflow-hidden"
             style={{
               ...panelStyle,
+              border: "none",
               animation: "scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            <div className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl shrink-0">
+            <div className="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
