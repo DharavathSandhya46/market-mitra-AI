@@ -336,7 +336,7 @@ const SettingsModal = () => {
               </section>
             </div>
 
-            <div className="p-4 border-t border-white/10 flex justify-end gap-3 rounded-b-2xl shrink-0" style={panelStyle}>
+            <div className="p-4 border-t border-white/10 flex justify-end gap-3 shrink-0" style={panelStyle}>
               <button
                 onClick={() => setOpen(false)}
                 className="px-5 py-2.5 rounded-xl font-medium transition-all text-white"
