@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, Brain, TrendingUp, Mic, Bell, Star, AlertTriangle, IndianRupee } from "lucide-react";
+import { Package, Brain, TrendingUp, Bell, Star, AlertTriangle, IndianRupee } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useProductStore } from "@/stores/productStore";
+import BigVoiceMic from "@/components/BigVoiceMic";
 
 const CHART_COLORS = ["hsl(28,100%,55%)", "hsl(160,60%,45%)", "hsl(250,60%,65%)", "hsl(340,70%,55%)", "hsl(200,60%,50%)"];
 
@@ -48,13 +49,8 @@ const DashboardHome = () => {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* Voice hint */}
-      <div className="glass-card p-3 flex items-center gap-3 border-l-4 border-l-primary cursor-pointer hover:bg-primary/5 transition-colors" onClick={() => navigate("/dashboard/add")}>
-        <div className="w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center animate-pulse">
-          <Mic className="w-4 h-4 text-primary" />
-        </div>
-        <p className="text-sm font-medium text-foreground">{t("voiceHint")}</p>
-      </div>
+      {/* Big Voice Mic */}
+      <BigVoiceMic />
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
