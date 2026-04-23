@@ -20,13 +20,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const { wallpaper } = useTheme();
+  const { wallpaper, theme } = useTheme();
+  const isLight = theme === "light";
 
   return (
     <div className="min-h-screen relative">
-      {/* Background */}
-      <img src={wallpaper.src} alt="" className="fixed inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} />
-      <div className="fixed inset-0 bg-background/95 backdrop-blur-md" />
+      {/* Background image — always visible, cover/center */}
+      <div
+        aria-hidden
+        className="fixed inset-0 bg-center bg-cover bg-no-repeat"
+        style={{ backgroundImage: `url(${wallpaper.src})` }}
+      />
+      {/* Subtle dark contrast layer (both modes) */}
+      <div aria-hidden className="fixed inset-0 bg-black/20" />
+      {/* Theme-aware tint + light blur so wallpaper stays visible */}
+      <div
+        aria-hidden
+        className={`fixed inset-0 backdrop-blur-[4px] ${
+          isLight ? "bg-white/60" : "bg-background/70"
+        }`}
+      />
 
       <div className="relative z-10 flex min-h-screen">
         {/* Mobile overlay */}
